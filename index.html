@@ -45,63 +45,33 @@ header {
 .btn-amber:hover { background: rgba(245,166,35,0.14); border-color: var(--amber); }
 .btn-red:hover { border-color: var(--red); color: var(--red); }
 
-/* API KEY SETUP SCREEN */
-#setupScreen {
-  max-width: 520px; margin: 60px auto; padding: 0 24px;
-}
-.setup-logo { font-family: var(--head); font-size: 38px; letter-spacing: 5px; color: var(--amber); margin-bottom: 4px; }
-.setup-logo span { color: var(--muted); }
-.setup-tagline { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 36px; }
-.setup-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; }
-.setup-card h2 { font-family: var(--head); font-size: 20px; letter-spacing: 2px; margin-bottom: 12px; }
-.setup-card p { font-size: 14px; color: #a0a4b8; line-height: 1.6; margin-bottom: 20px; }
-.setup-card p strong { color: var(--text); }
-.steps { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
-.step { display: flex; gap: 12px; align-items: flex-start; }
-.step-num { font-family: var(--mono); font-size: 11px; background: var(--amber-dim); color: var(--amber); border-radius: 3px; padding: 2px 7px; flex-shrink: 0; margin-top: 1px; }
-.step-text { font-size: 13px; color: #a0a4b8; line-height: 1.5; }
-.step-text a { color: var(--amber); text-decoration: none; }
-.step-text a:hover { text-decoration: underline; }
-.step-text code { font-family: var(--mono); font-size: 12px; background: var(--bg); padding: 1px 6px; border-radius: 3px; color: var(--text); }
-.key-input-row { display: flex; gap: 8px; }
-#setupKeyInput {
-  flex: 1; background: var(--bg); border: 1px solid var(--border2);
-  color: var(--text); font-family: var(--mono); font-size: 13px;
-  padding: 10px 12px; border-radius: 5px; outline: none;
-}
-#setupKeyInput:focus { border-color: var(--amber); }
-#setupKeyInput::placeholder { color: var(--muted); }
-#setupError { font-family: var(--mono); font-size: 11px; color: var(--red); margin-top: 8px; display: none; }
-
-/* MAIN APP */
-#appScreen { display: none; }
 main { padding: 24px; max-width: 1100px; margin: 0 auto; }
 
-/* API key mini-bar inside app */
-#keyBar {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
-  padding: 10px 14px; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 6px; font-family: var(--mono); font-size: 11px;
+/* OCR STATUS BAR */
+#ocrStatus {
+  display: none; background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 11px 16px; margin-bottom: 16px;
+  font-family: var(--mono); font-size: 12px; color: var(--muted);
+  align-items: center; gap: 10px;
 }
-#keyBar .key-label { color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-#keyBar .key-val { color: var(--amber); flex: 1; }
-#keyBar button { font-family: var(--mono); font-size: 10px; background: none; border: 1px solid var(--border); color: var(--muted); padding: 3px 8px; border-radius: 3px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-#keyBar button:hover { border-color: var(--red); color: var(--red); }
+#ocrStatus.active { display: flex; }
+.ocr-spinner { width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--amber); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#ocrLabel { flex: 1; }
+#ocrProgress { font-family: var(--mono); font-size: 11px; color: var(--amber); }
 
 /* DROP ZONE */
 #dropzone {
   border: 1.5px dashed var(--border); border-radius: 8px;
   padding: 44px 24px; text-align: center;
-  transition: all .2s; position: relative; margin-bottom: 24px;
+  transition: all .2s; margin-bottom: 24px;
   background: var(--surface); cursor: pointer;
 }
 #dropzone.drag-over { border-color: var(--amber); background: rgba(245,166,35,0.04); }
-/* The file input is NOT inside the dropzone — avoids blocking issues */
 .dz-icon { font-size: 30px; margin-bottom: 10px; opacity: .5; }
 .dz-title { font-family: var(--head); font-size: 20px; letter-spacing: 3px; margin-bottom: 6px; }
 .dz-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
-
-/* hidden real file input, triggered via JS */
+.dz-free { font-family: var(--mono); font-size: 10px; color: var(--green); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 #fileInput { display: none; }
 
 /* QUEUE */
@@ -113,12 +83,12 @@ main { padding: 24px; max-width: 1100px; margin: 0 auto; }
 }
 .qi-name { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .qi-status { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-.qi-status.analyzing { color: var(--amber); }
-.qi-status.done { color: var(--green); }
-.qi-status.error { color: var(--red); }
-.qi-status.manual { color: var(--blue); }
-.qi-spinner { width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--amber); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.qi-status.reading  { color: var(--amber); }
+.qi-status.done     { color: var(--green); }
+.qi-status.no-data  { color: var(--muted); }
+.qi-status.error    { color: var(--red); }
+.qi-status.manual   { color: var(--blue); }
+.qi-spinner2 { width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--amber); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
 
 /* CONFLICT BAR */
 #conflictBar {
@@ -127,7 +97,6 @@ main { padding: 24px; max-width: 1100px; margin: 0 auto; }
   font-family: var(--mono); font-size: 12px; color: var(--red);
   align-items: center; gap: 10px;
 }
-
 /* LEGEND */
 #legend {
   display: none; gap: 18px; margin-bottom: 18px; flex-wrap: wrap;
@@ -180,10 +149,13 @@ main { padding: 24px; max-width: 1100px; margin: 0 auto; }
 /* EMPTY */
 #empty { text-align: center; padding: 52px 0; font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; display: none; }
 
+/* RAW TEXT FALLBACK NOTICE */
+.parse-warn { font-family: var(--mono); font-size: 10px; color: var(--amber); margin-top: 4px; }
+
 /* MANUAL MODAL */
 .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
 .modal-backdrop.open { display: flex; }
-.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; width: 100%; max-width: 490px; padding: 26px; position: relative; animation: mIn .18s ease; }
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; width: 100%; max-width: 490px; padding: 26px; position: relative; animation: mIn .18s ease; max-height: 90vh; overflow-y: auto; }
 @keyframes mIn { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
 .modal-title { font-family: var(--head); font-size: 22px; letter-spacing: 3px; margin-bottom: 3px; }
 .modal-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px; }
@@ -196,6 +168,7 @@ main { padding: 24px; max-width: 1100px; margin: 0 auto; }
   width: 100%; background: var(--bg); border: 1px solid var(--border2);
   color: var(--text); font-family: var(--mono); font-size: 13px;
   padding: 8px 11px; border-radius: 4px; outline: none; transition: border-color .15s;
+  -webkit-appearance: none;
 }
 .field input:focus { border-color: var(--amber); }
 .field input::placeholder { color: var(--muted); }
@@ -213,93 +186,53 @@ main { padding: 24px; max-width: 1100px; margin: 0 auto; }
 </head>
 <body>
 
-<!-- ══════════ SETUP SCREEN ══════════ -->
-<div id="setupScreen">
-  <div class="setup-logo">CHRON<span>O</span></div>
-  <div class="setup-tagline">Screenshot Timeline Sorter</div>
-
-  <div class="setup-card">
-    <h2>One-time setup</h2>
-    <p>
-      This app uses <strong>Claude AI</strong> to read your screenshots and pull out the train details automatically.
-      To do that it needs an <strong>API key</strong> — think of it like a password that lets the app talk to Claude.
-      It's free to get, and your key is only stored in your browser.
-    </p>
-
-    <div class="steps">
-      <div class="step">
-        <span class="step-num">1</span>
-        <div class="step-text">Go to <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a> and sign up (free)</div>
-      </div>
-      <div class="step">
-        <span class="step-num">2</span>
-        <div class="step-text">Click <strong>"Create Key"</strong>, give it any name, copy the key — it looks like <code>sk-ant-api03-…</code></div>
-      </div>
-      <div class="step">
-        <span class="step-num">3</span>
-        <div class="step-text">Paste it below and press <strong>Continue</strong></div>
-      </div>
-    </div>
-
-    <div class="key-input-row">
-      <input type="password" id="setupKeyInput" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') saveKey()">
-      <button class="btn btn-amber" onclick="saveKey()">Continue →</button>
-    </div>
-    <div id="setupError"></div>
+<header>
+  <div>
+    <div class="logo">CHRON<span>O</span></div>
+    <div class="subtitle">Screenshot Timeline Sorter</div>
   </div>
-</div>
+  <div class="hdr-right">
+    <span class="badge-count" id="countBadge" style="display:none"></span>
+    <button class="btn btn-amber" onclick="openModal()">+ Add manually</button>
+    <button class="btn btn-red" id="btnClear" style="display:none" onclick="clearAll()">Clear all</button>
+  </div>
+</header>
 
-<!-- ══════════ APP SCREEN ══════════ -->
-<div id="appScreen">
-  <header>
-    <div>
-      <div class="logo">CHRON<span>O</span></div>
-      <div class="subtitle">Screenshot Timeline Sorter</div>
-    </div>
-    <div class="hdr-right">
-      <span class="badge-count" id="countBadge" style="display:none"></span>
-      <button class="btn btn-amber" onclick="openModal()">+ Add manually</button>
-      <button class="btn btn-red" id="btnClear" style="display:none" onclick="clearAll()">Clear all</button>
-    </div>
-  </header>
+<main>
+  <!-- OCR progress bar -->
+  <div id="ocrStatus">
+    <div class="ocr-spinner"></div>
+    <span id="ocrLabel">Reading image…</span>
+    <span id="ocrProgress"></span>
+  </div>
 
-  <main>
-    <!-- Key mini-bar -->
-    <div id="keyBar">
-      <span class="key-label">API Key</span>
-      <span class="key-val" id="keyPreview"></span>
-      <button onclick="changeKey()">Change key</button>
-    </div>
+  <!-- Drop zone -->
+  <div id="dropzone" onclick="triggerFilePick()" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
+    <div class="dz-icon">📸</div>
+    <div class="dz-title">Tap to add screenshots</div>
+    <div class="dz-sub">or drag and drop · multiple files supported</div>
+    <div class="dz-free">✓ No API key needed · runs entirely in your browser</div>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" multiple onchange="onFilePick()">
 
-    <!-- Drop zone (no file input inside — avoids iOS/click issues) -->
-    <div id="dropzone" onclick="triggerFilePick()" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
-      <div class="dz-icon">📸</div>
-      <div class="dz-title">Tap to add screenshots</div>
-      <div class="dz-sub">or drag and drop · multiple files supported</div>
-    </div>
-    <!-- File input lives outside the dropzone -->
-    <input type="file" id="fileInput" accept="image/*" multiple onchange="onFilePick()">
+  <div id="queue"></div>
 
-    <div id="queue"></div>
+  <div id="conflictBar">
+    <span style="font-size:15px">⚠</span>
+    <span id="conflictMsg"></span>
+  </div>
+  <div id="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Time overlap</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Round-trip / close departure</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Duplicate train + time</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Manual entry</div>
+  </div>
 
-    <div id="conflictBar">
-      <span style="font-size:15px">⚠</span>
-      <span id="conflictMsg"></span>
-    </div>
+  <div id="timeline"></div>
+  <div id="empty">No events yet — tap above or add manually</div>
+</main>
 
-    <div id="legend">
-      <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Time overlap</div>
-      <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Round-trip / close departure</div>
-      <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Duplicate train + time</div>
-      <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Manual entry</div>
-    </div>
-
-    <div id="timeline"></div>
-    <div id="empty">No events yet — tap above or add manually</div>
-  </main>
-</div>
-
-<!-- ══════════ MANUAL ENTRY MODAL ══════════ -->
+<!-- MANUAL ENTRY MODAL -->
 <div class="modal-backdrop" id="modalBg" onclick="bgClick(event)">
   <div class="modal">
     <button class="modal-x" onclick="closeModal()">✕</button>
@@ -347,54 +280,28 @@ main { padding: 24px; max-width: 1100px; margin: 0 auto; }
   </div>
 </div>
 
+<!-- Tesseract.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js"></script>
 <script>
-const API_URL = "https://api.anthropic.com/v1/messages";
-const MODEL   = "claude-sonnet-4-20250514";
-const RT_WIN  = 90;
+const RT_WIN = 90;
 let events = [], uid = 0;
+let worker = null;
 
-// ── SETUP / KEY ──
-function init() {
-  const k = localStorage.getItem('chrono_key');
-  if (k && k.startsWith('sk-ant')) {
-    showApp(k);
-  } else {
-    document.getElementById('setupScreen').style.display = 'block';
-  }
+// ── INIT TESSERACT ──
+async function getWorker() {
+  if (worker) return worker;
+  worker = await Tesseract.createWorker('eng+swe', 1, {
+    logger: m => {
+      if (m.status === 'recognizing text') {
+        document.getElementById('ocrProgress').textContent = Math.round(m.progress * 100) + '%';
+      }
+    }
+  });
+  return worker;
 }
 
-function saveKey() {
-  const k = document.getElementById('setupKeyInput').value.trim();
-  const errEl = document.getElementById('setupError');
-  if (!k.startsWith('sk-ant')) {
-    errEl.textContent = '⚠ That doesn\'t look like a valid key. It should start with sk-ant…';
-    errEl.style.display = 'block';
-    return;
-  }
-  errEl.style.display = 'none';
-  localStorage.setItem('chrono_key', k);
-  showApp(k);
-}
-
-function showApp(k) {
-  document.getElementById('setupScreen').style.display = 'none';
-  document.getElementById('appScreen').style.display = 'block';
-  document.getElementById('keyPreview').textContent = k.slice(0,18) + '…';
-}
-
-function changeKey() {
-  localStorage.removeItem('chrono_key');
-  document.getElementById('appScreen').style.display = 'none';
-  document.getElementById('setupScreen').style.display = 'block';
-  document.getElementById('setupKeyInput').value = '';
-}
-
-function getKey() { return localStorage.getItem('chrono_key') || ''; }
-
-// ── FILE PICK ──
-function triggerFilePick() {
-  document.getElementById('fileInput').click();
-}
+// ── FILE HANDLING ──
+function triggerFilePick() { document.getElementById('fileInput').click(); }
 function onFilePick() {
   const fi = document.getElementById('fileInput');
   handleFiles([...fi.files]);
@@ -402,10 +309,7 @@ function onFilePick() {
 }
 function dzOver(e)  { e.preventDefault(); document.getElementById('dropzone').classList.add('drag-over'); }
 function dzLeave()  { document.getElementById('dropzone').classList.remove('drag-over'); }
-function dzDrop(e)  {
-  e.preventDefault(); document.getElementById('dropzone').classList.remove('drag-over');
-  handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
-}
+function dzDrop(e)  { e.preventDefault(); document.getElementById('dropzone').classList.remove('drag-over'); handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/'))); }
 
 async function handleFiles(files) {
   if (!files.length) return;
@@ -413,102 +317,166 @@ async function handleFiles(files) {
   renderTimeline();
 }
 
+// ── PROCESS FILE ──
+async function processFile(file) {
+  const id = ++uid;
+  addQItem(id, file.name);
+  const dataURL = await toDataURL(file);
+
+  try {
+    // Show OCR bar
+    const ocrEl = document.getElementById('ocrStatus');
+    document.getElementById('ocrLabel').textContent = `Reading: ${file.name}`;
+    document.getElementById('ocrProgress').textContent = '0%';
+    ocrEl.classList.add('active');
+
+    const w = await getWorker();
+    const { data: { text } } = await w.recognize(file);
+
+    ocrEl.classList.remove('active');
+
+    const parsed = parseSkånetrafiken(text);
+    if (parsed.length) {
+      for (const ev of parsed) {
+        events.push({ ...ev, _id: `${id}_${Math.random().toString(36).slice(2)}`, _thumb: dataURL, _file: file.name, _manual: false });
+      }
+      qDone(id, 'done', `${parsed.length} event${parsed.length > 1 ? 's' : ''} found`);
+    } else {
+      qDone(id, 'no-data', 'No train data found');
+    }
+  } catch(e) {
+    console.error(e);
+    document.getElementById('ocrStatus').classList.remove('active');
+    qDone(id, 'error', 'OCR failed');
+  }
+}
+
+// ── PARSE SKÅNETRAFIKEN OCR TEXT ──
+function parseSkånetrafiken(text) {
+  // Normalise OCR quirks
+  const t = text
+    .replace(/[|]/g, 'I')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n');
+
+  const results = [];
+
+  // Split into blocks if multiple events in one screenshot
+  // (each block starts with "Öresundståg" or similar operator line)
+  const blocks = splitIntoBlocks(t);
+
+  for (const block of blocks) {
+    const ev = parseBlock(block);
+    if (ev) results.push(ev);
+  }
+  return results;
+}
+
+function splitIntoBlocks(text) {
+  // Split on operator line — handles multiple events per screenshot
+  const lines = text.split('\n');
+  const blocks = [];
+  let current = [];
+
+  for (const line of lines) {
+    // New block starts when we see a train operator line
+    if (/öresundståg|pågatåg|sj|regional|intercity|snabbtåg|flygbuss/i.test(line) && current.length > 3) {
+      blocks.push(current.join('\n'));
+      current = [line];
+    } else {
+      current.push(line);
+    }
+  }
+  if (current.length) blocks.push(current.join('\n'));
+  return blocks.filter(b => b.trim().length > 10);
+}
+
+function parseBlock(text) {
+  const ev = {
+    operator: null, trainNumber: null,
+    date: null, departureTime: null, arrivalTime: null,
+    from: null, to: null,
+    refNumber: null, status: 'confirmed',
+    type: 'train', rawSummary: ''
+  };
+
+  // Train operator + number: "Öresundståg (tågnr 1164)"
+  const trainMatch = text.match(/([a-zA-ZÅÄÖåäö\s]+)\s*[\(\[]?\s*t[åa]gnr\.?\s*:?\s*(\d+)/i);
+  if (trainMatch) {
+    ev.operator = trainMatch[1].trim().replace(/\s+/g, ' ');
+    ev.trainNumber = trainMatch[2];
+  }
+
+  // Avgång line: "Avgång 2026-05-08 01:02 CPH Airport Kastrup"
+  const depMatch = text.match(/avg[åa]ng\s+(\d{4}-\d{2}-\d{2})\s+(\d{1,2}[:.]\d{2})\s+(.+)/i);
+  if (depMatch) {
+    ev.date = depMatch[1];
+    ev.departureTime = depMatch[2].replace('.', ':');
+    ev.from = cleanStation(depMatch[3]);
+  }
+
+  // Ankomst line: "Ankomst 2026-05-08 01:39 Lund C"
+  const arrMatch = text.match(/ankomst\s+(\d{4}-\d{2}-\d{2})\s+(\d{1,2}[:.]\d{2})\s+(.+)/i);
+  if (arrMatch) {
+    if (!ev.date) ev.date = arrMatch[1];
+    ev.arrivalTime = arrMatch[2].replace('.', ':');
+    ev.to = cleanStation(arrMatch[3]);
+  }
+
+  // Route line fallback: "CPH Airport Kastrup -> Lund C riktning Lund C"
+  if (!ev.from || !ev.to) {
+    const routeMatch = text.match(/([A-ZÅÄÖa-zåäö][^→\-\>]+?)\s*[-–→>]{1,2}\s*([A-ZÅÄÖa-zåäö][^r\n]+?)(?:\s+riktning|\s*$)/im);
+    if (routeMatch) {
+      if (!ev.from) ev.from = cleanStation(routeMatch[1]);
+      if (!ev.to)   ev.to   = cleanStation(routeMatch[2]);
+    }
+  }
+
+  // Reklamationsnummer: "RG2026-05-JZQCHM"
+  const refMatch = text.match(/RG\d{4}-\d{2}-[A-Z0-9]+/);
+  if (refMatch) ev.refNumber = refMatch[0];
+
+  // Need at least a date to be useful
+  if (!ev.date) return null;
+
+  ev.rawSummary = [ev.from, ev.to].filter(Boolean).join(' → ');
+  return ev;
+}
+
+function cleanStation(s) {
+  return s
+    .replace(/riktning.*/i, '')  // remove "riktning X"
+    .replace(/\n.*/s, '')        // only first line
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // ── QUEUE UI ──
-function addQItem(id, name, isManual) {
+function addQItem(id, name) {
   const q = document.getElementById('queue');
   const el = document.createElement('div');
   el.className = 'queue-item'; el.id = 'qi' + id;
-  el.innerHTML = isManual
-    ? `<span style="flex-shrink:0">✏️</span><div class="qi-name">${esc(name)}</div><div class="qi-status manual">Manual</div>`
-    : `<div class="qi-spinner" id="qis${id}"></div><div class="qi-name">${esc(name)}</div><div class="qi-status analyzing" id="qist${id}">Analyzing…</div>`;
+  el.innerHTML = `<div class="qi-spinner2" id="qis${id}"></div><div class="qi-name">${esc(name)}</div><div class="qi-status reading" id="qist${id}">Reading…</div>`;
   q.appendChild(el);
 }
-function qDone(id, ok, errMsg) {
+function addQItemManual(id, name) {
+  const q = document.getElementById('queue');
+  const el = document.createElement('div');
+  el.className = 'queue-item'; el.id = 'qi' + id;
+  el.innerHTML = `<span style="flex-shrink:0">✏️</span><div class="qi-name">${esc(name)}</div><div class="qi-status manual">Manual</div>`;
+  q.appendChild(el);
+}
+function qDone(id, status, msg) {
   const s = document.getElementById('qis' + id);
   const t = document.getElementById('qist' + id);
   if (s) s.style.display = 'none';
   if (t) {
-    t.textContent = ok ? 'Done' : 'Failed';
-    t.className = 'qi-status ' + (ok ? 'done' : 'error');
-    if (errMsg) t.title = errMsg;
+    t.textContent = msg || status;
+    t.className = 'qi-status ' + status;
   }
 }
 
-// ── FILE → BASE64 ──
-const toB64     = f => new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(f); });
 const toDataURL = f => new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
-
-// ── CLAUDE API ──
-async function analyzeImage(b64, mime) {
-  const prompt = `You are a travel data extraction assistant. Look at this screenshot and extract every transit/travel event you can see.
-
-Respond with ONLY a raw JSON object — no markdown fences, no explanation, no extra text:
-{
-  "found": true,
-  "events": [
-    {
-      "date": "YYYY-MM-DD or null",
-      "departureTime": "HH:MM or null",
-      "arrivalTime": "HH:MM or null",
-      "from": "departure station or null",
-      "to": "arrival station or null",
-      "trainNumber": "train/flight number or null",
-      "operator": "company name or null",
-      "type": "train",
-      "rawSummary": "one-line plain text summary",
-      "status": "confirmed",
-      "refNumber": "reference/claim number or null"
-    }
-  ]
-}
-
-If no travel data is visible: {"found":false,"events":[]}
-Use 24h HH:MM time. Extract ALL events in the image, one per array entry.`;
-
-  const resp = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: MODEL, max_tokens: 1000,
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-        { type: 'text', text: prompt }
-      ]}]
-    })
-  });
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `HTTP ${resp.status}`);
-  }
-  const data = await resp.json();
-  const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g,'').trim();
-  return JSON.parse(raw);
-}
-
-// ── PROCESS FILE ──
-async function processFile(file) {
-  const id = ++uid;
-  addQItem(id, file.name, false);
-  try {
-    const [b64, dataURL] = await Promise.all([toB64(file), toDataURL(file)]);
-    const result = await analyzeImage(b64, file.type || 'image/jpeg');
-    if (result.found && result.events?.length) {
-      for (const ev of result.events) {
-        events.push({ ...ev, _id: `${id}_${Math.random().toString(36).slice(2)}`, _thumb: dataURL, _file: file.name, _manual: false });
-      }
-    }
-    qDone(id, true);
-  } catch(e) {
-    console.error(e);
-    qDone(id, false, e.message);
-  }
-}
 
 // ── MANUAL MODAL ──
 function openModal() {
@@ -532,7 +500,7 @@ function submitManual() {
   const id    = ++uid;
   const train = document.getElementById('fTrain').value.trim();
   const label = train ? `Manual: tågnr ${train}` : `Manual: ${from} → ${to}`;
-  addQItem(id, label, true);
+  addQItemManual(id, label);
 
   events.push({
     date,
@@ -590,14 +558,14 @@ function detectConflicts(evs) {
   }
 }
 
-// ── RENDER TIMELINE ──
+// ── RENDER ──
 function renderTimeline() {
   const none = !events.length;
   document.getElementById('empty').style.display = none ? 'block' : 'none';
   document.getElementById('countBadge').style.display = none ? 'none' : 'inline';
   document.getElementById('btnClear').style.display = none ? 'none' : 'inline';
   const tl = document.getElementById('timeline');
-  if (none) { tl.innerHTML=''; hide('conflictBar'); hide('legend'); return; }
+  if (none) { tl.innerHTML=''; hideEl('conflictBar'); hideEl('legend'); return; }
 
   document.getElementById('countBadge').textContent = `${events.length} event${events.length!==1?'s':''}`;
 
@@ -650,7 +618,7 @@ function renderTimeline() {
       if (ev.trainNumber)        badges.push(`<span class="badge b-info">tågnr ${esc(ev.trainNumber)}</span>`);
       if (ev.refNumber)          badges.push(`<span class="badge b-info">${esc(ev.refNumber)}</span>`);
 
-      const meta=[ev.operator, ev.status&&ev.status!=='confirmed'?ev.status.toUpperCase():null].filter(Boolean).join(' · ');
+      const meta = [ev.operator, ev.status&&ev.status!=='confirmed'?ev.status.toUpperCase():null].filter(Boolean).join(' · ');
 
       card.innerHTML=`
         <button class="ec-del" onclick="delEvent('${ev._id}')" title="Remove">✕</button>
@@ -672,7 +640,7 @@ function renderTimeline() {
 }
 
 function delEvent(id) { events=events.filter(e=>e._id!==id); renderTimeline(); }
-function hide(id) { const el=document.getElementById(id); if(el) el.style.display='none'; }
+function hideEl(id) { const el=document.getElementById(id); if(el) el.style.display='none'; }
 function fmtDate(ds) {
   if (!ds||ds==='—') return '<span>Unknown Date</span>';
   try {
@@ -684,12 +652,9 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 function clearAll() {
   events=[]; uid=0;
   ['queue','timeline'].forEach(id=>document.getElementById(id).innerHTML='');
-  ['conflictBar','legend','countBadge','btnClear'].forEach(hide);
+  ['conflictBar','legend','countBadge','btnClear'].forEach(hideEl);
   document.getElementById('empty').style.display='none';
 }
-
-// boot
-init();
 </script>
 </body>
 </html>
