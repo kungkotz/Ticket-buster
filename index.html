@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHRONO — Screenshot Timeline Sorter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #07080d;
+    --surface:  #0f1118;
+    --border:   #1e2130;
+    --amber:    #f5a623;
+    --amber-dim:#7a5212;
+    --red:      #e8384f;
+    --red-dim:  #5c1520;
+    --green:    #2ecc71;
+    --green-dim:#124a2a;
+    --text:     #e8eaf2;
+    --muted:    #5a5f78;
+    --mono:     'DM Mono', monospace;
+    --head:     'Bebas Neue', sans-serif;
+    --body:     'Inter', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── TOP BAR ── */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(7,8,13,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--head);
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .logo span { color: var(--muted); }
+  .subtitle {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .badge-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .btn-clear {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .15s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .btn-clear:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── MAIN LAYOUT ── */
+  main { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+  /* ── DROP ZONE ── */
+  #dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    padding: 56px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    margin-bottom: 40px;
+    background: var(--surface);
+  }
+  #dropzone.drag-over {
+    border-color: var(--amber);
+    background: rgba(245,166,35,0.04);
+  }
+  #dropzone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .dz-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+    opacity: .4;
+  }
+  .dz-title {
+    font-family: var(--head);
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .dz-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* ── PROCESSING QUEUE ── */
+  #queue { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+  .queue-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .queue-item .qi-name { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .qi-status { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  .qi-status.analyzing { color: var(--amber); }
+  .qi-status.done { color: var(--green); }
+  .qi-status.error { color: var(--red); }
+  .qi-spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--amber); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── LEGEND ── */
+  #legend {
+    display: none;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .leg { display: flex; align-items: center; gap: 7px; }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* ── TIMELINE ── */
+  #timeline { display: flex; flex-direction: column; gap: 32px; }
+
+  .date-group {}
+  .date-header {
+    font-family: var(--head);
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .date-header span { color: var(--text); }
+
+  .events-list { display: flex; flex-direction: column; gap: 8px; }
+
+  /* ── EVENT CARD ── */
+  .event-card {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    border-radius: 6px;
+    transition: border-color .15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .event-card:hover { border-color: var(--amber); border-left-color: var(--amber); }
+  .event-card.conflict-overlap {
+    border-left-color: var(--red);
+    background: rgba(232,56,79,0.05);
+  }
+  .event-card.conflict-roundtrip {
+    border-left-color: var(--amber);
+    background: rgba(245,166,35,0.05);
+  }
+
+  .ec-time {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--amber);
+    line-height: 1.6;
+  }
+  .ec-time .arr { color: var(--muted); font-size: 11px; }
+
+  .ec-route {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ec-main {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .ec-arrow { color: var(--muted); font-size: 12px; }
+  .ec-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .ec-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .badge-overlap { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+  .badge-roundtrip { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); }
+  .badge-train { background: #101828; color: var(--muted); border: 1px solid var(--border); }
+
+  /* ── THUMB PREVIEW ── */
+  .ec-thumb {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 60px;
+    overflow: hidden;
+    opacity: .07;
+    pointer-events: none;
+  }
+  .ec-thumb img { height: 100%; width: 100%; object-fit: cover; object-position: left center; }
+
+  /* ── CONFLICT SUMMARY BAR ── */
+  #conflict-bar {
+    display: none;
+    background: rgba(232,56,79,0.08);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red);
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+  #conflict-bar .cb-icon { font-size: 18px; }
+
+  /* ── EMPTY STATE ── */
+  #empty {
+    text-align: center;
+    padding: 64px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: none;
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .event-card { animation: fadeUp .25s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    main { padding: 16px; }
+    header { padding: 14px 16px; }
+    .event-card { grid-template-columns: 70px 1fr; }
+    .ec-badges { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">CHRON<span>O</span></div>
+    <div class="subtitle">Screenshot Timeline Sorter</div>
+  </div>
+  <div class="header-right">
+    <div class="badge-count" id="countBadge" style="display:none"></div>
+    <button class="btn-clear" id="btnClear" style="display:none" onclick="clearAll()">Clear all</button>
+  </div>
+</header>
+
+<main>
+  <div id="dropzone">
+    <input type="file" id="fileInput" accept="image/*" multiple>
+    <div class="dz-icon">📸</div>
+    <div class="dz-title">Drop Screenshots Here</div>
+    <div class="dz-sub">or click to browse · multiple files supported</div>
+  </div>
+
+  <div id="queue"></div>
+
+  <div id="conflict-bar">
+    <span class="cb-icon">⚠</span>
+    <span id="conflictMsg"></span>
+  </div>
+
+  <div id="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--red)"></div> Overlapping times</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div> Same-route round trip / close departure</div>
+  </div>
+
+  <div id="timeline"></div>
+  <div id="empty">No events yet — upload some screenshots above</div>
+</main>
+
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL   = "claude-sonnet-4-20250514";
+const ROUNDTRIP_WINDOW_MIN = 90; // flag if reverse trip departs within X min of forward arrival
+
+let events = []; // parsed events
+
+// ── DRAG & DROP ──
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('drag-over');
+  handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
+});
+fi.addEventListener('change', () => {
+  handleFiles([...fi.files]);
+  fi.value = '';
+});
+
+async function handleFiles(files) {
+  if (!files.length) return;
+  for (const file of files) {
+    await processFile(file);
+  }
+  renderTimeline();
+}
+
+// ── QUEUE UI ──
+function addQueueItem(id, name) {
+  const q = document.getElementById('queue');
+  const el = document.createElement('div');
+  el.className = 'queue-item';
+  el.id = 'qi-' + id;
+  el.innerHTML = `
+    <div class="qi-spinner" id="qis-${id}"></div>
+    <div class="qi-name">${escHtml(name)}</div>
+    <div class="qi-status analyzing" id="qistat-${id}">Analyzing…</div>
+  `;
+  q.appendChild(el);
+}
+function setQueueDone(id, ok) {
+  const spinner = document.getElementById('qis-' + id);
+  const stat = document.getElementById('qistat-' + id);
+  if (spinner) spinner.style.display = 'none';
+  if (stat) {
+    stat.textContent = ok ? 'Done' : 'Failed';
+    stat.className = 'qi-status ' + (ok ? 'done' : 'error');
+  }
+}
+
+// ── IMAGE → BASE64 ──
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+function fileToDataURL(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── CALL CLAUDE API ──
+async function analyzeImage(base64, mediaType) {
+  const prompt = `You are a data extraction assistant. Look at this screenshot and extract any travel/transit/transportation event information.
+
+Return ONLY a valid JSON object (no markdown, no extra text) with these fields:
+{
+  "found": true/false,
+  "events": [
+    {
+      "date": "YYYY-MM-DD or null",
+      "departureTime": "HH:MM or null",
+      "arrivalTime": "HH:MM or null",
+      "from": "departure location name or null",
+      "to": "arrival location name or null",
+      "trainNumber": "number/code or null",
+      "operator": "company name or null",
+      "type": "train/bus/flight/ferry/other",
+      "rawSummary": "one-line plain text summary of what you see",
+      "status": "confirmed/delayed/cancelled/pending or null",
+      "refNumber": "reference/booking/claim number or null"
+    }
+  ]
+}
+
+Rules:
+- If the image contains multiple events (e.g. outbound + return booking), list each as a separate object in the array.
+- If no travel event is found, set found:false and events:[].
+- Use 24-hour time format for HH:MM.
+- For dates, infer the year from context if visible; otherwise use null.
+- Extract ALL events visible, not just the first one.`;
+
+  const resp = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 1000,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+  });
+
+  if (!resp.ok) throw new Error(`API ${resp.status}`);
+  const data = await resp.json();
+  const text = data.content.map(b => b.text || '').join('');
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+// ── PROCESS ONE FILE ──
+let uid = 0;
+async function processFile(file) {
+  const id = ++uid;
+  addQueueItem(id, file.name);
+  try {
+    const [b64, dataURL] = await Promise.all([fileToBase64(file), fileToDataURL(file)]);
+    const result = await analyzeImage(b64, file.type || 'image/jpeg');
+    if (result.found && result.events?.length) {
+      for (const ev of result.events) {
+        events.push({ ...ev, _id: id + '_' + Math.random(), _thumb: dataURL, _file: file.name });
+      }
+    }
+    setQueueDone(id, true);
+  } catch (e) {
+    console.error(e);
+    setQueueDone(id, false);
+  }
+}
+
+// ── SORT & CONFLICT DETECTION ──
+function toMinutes(timeStr) {
+  if (!timeStr) return null;
+  const [h, m] = timeStr.split(':').map(Number);
+  return h * 60 + m;
+}
+function toDateTime(date, time) {
+  if (!date || !time) return null;
+  return new Date(date + 'T' + time + ':00');
+}
+
+function detectConflicts(evs) {
+  // Reset
+  evs.forEach(e => { e._conflicts = []; e._conflictType = null; });
+
+  for (let i = 0; i < evs.length; i++) {
+    for (let j = i + 1; j < evs.length; j++) {
+      const a = evs[i], b = evs[j];
+      if (!a.date || !b.date) continue;
+
+      const aDepDT = toDateTime(a.date, a.departureTime);
+      const aArrDT = toDateTime(a.date, a.arrivalTime);
+      const bDepDT = toDateTime(b.date, b.departureTime);
+      const bArrDT = toDateTime(b.date, b.arrivalTime);
+
+      // 1. TIME OVERLAP — both have dep+arr and ranges overlap
+      if (aDepDT && aArrDT && bDepDT && bArrDT) {
+        if (aDepDT < bArrDT && bDepDT < aArrDT) {
+          a._conflictType = a._conflictType === 'overlap' ? 'overlap' : 'overlap';
+          b._conflictType = 'overlap';
+          a._conflicts.push(b._id);
+          b._conflicts.push(a._id);
+          continue;
+        }
+      }
+
+      // 2. ROUND TRIP — A→B and B→A on same day, close times
+      const sameDay = a.date === b.date;
+      const fromA = normalize(a.from), toA = normalize(a.to);
+      const fromB = normalize(b.from), toB = normalize(b.to);
+
+      if (sameDay && fromA && toA && fromB && toB) {
+        const isReverse = (fromA === toB && toA === fromB) ||
+                          (fromA.includes(fromB) || fromB.includes(fromA)) && (toA.includes(toB) || toB.includes(toA));
+
+        if (isReverse && aDepDT && bDepDT) {
+          const diffMin = Math.abs((bDepDT - aDepDT) / 60000);
+          if (diffMin <= ROUNDTRIP_WINDOW_MIN) {
+            if (!a._conflictType) a._conflictType = 'roundtrip';
+            if (!b._conflictType) b._conflictType = 'roundtrip';
+            a._conflicts.push(b._id);
+            b._conflicts.push(a._id);
+          }
+        }
+
+        // Also flag if departure of B is before arrival of A (impossible journey)
+        if (aArrDT && bDepDT && bDepDT < aArrDT && aDepDT && bDepDT > aDepDT) {
+          a._conflictType = 'overlap';
+          b._conflictType = 'overlap';
+          if (!a._conflicts.includes(b._id)) a._conflicts.push(b._id);
+          if (!b._conflicts.includes(a._id)) b._conflicts.push(a._id);
+        }
+      }
+    }
+  }
+}
+
+function normalize(str) {
+  if (!str) return '';
+  return str.toLowerCase().replace(/[^a-z0-9åäöæøü]/g, '').trim();
+}
+
+// ── RENDER ──
+function renderTimeline() {
+  if (!events.length) {
+    document.getElementById('empty').style.display = 'block';
+    document.getElementById('conflict-bar').style.display = 'none';
+    document.getElementById('legend').style.display = 'none';
+    document.getElementById('timeline').innerHTML = '';
+    document.getElementById('countBadge').style.display = 'none';
+    document.getElementById('btnClear').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('countBadge').style.display = 'inline';
+  document.getElementById('btnClear').style.display = 'inline';
+  document.getElementById('countBadge').textContent = events.length + ' event' + (events.length !== 1 ? 's' : '');
+
+  // Sort: events without date go last; within same date sort by dep time
+  const sorted = [...events].sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    const at = a.departureTime || '99:99';
+    const bt = b.departureTime || '99:99';
+    return at.localeCompare(bt);
+  });
+
+  detectConflicts(sorted);
+
+  // Count conflicts
+  const overlapCount = sorted.filter(e => e._conflictType === 'overlap').length;
+  const rtCount = sorted.filter(e => e._conflictType === 'roundtrip').length;
+  const hasConflicts = overlapCount + rtCount > 0;
+
+  const cbar = document.getElementById('conflict-bar');
+  if (hasConflicts) {
+    cbar.style.display = 'flex';
+    const parts = [];
+    if (overlapCount) parts.push(`${overlapCount} overlapping time conflict${overlapCount > 1 ? 's' : ''}`);
+    if (rtCount) parts.push(`${rtCount} round-trip / close-departure flag${rtCount > 1 ? 's' : ''}`);
+    document.getElementById('conflictMsg').textContent = parts.join(' · ');
+    document.getElementById('legend').style.display = 'flex';
+  } else {
+    cbar.style.display = 'none';
+    document.getElementById('legend').style.display = 'none';
+  }
+
+  // Group by date
+  const groups = {};
+  for (const ev of sorted) {
+    const key = ev.date || '—';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(ev);
+  }
+
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+
+  for (const [dateKey, evs] of Object.entries(groups)) {
+    const grp = document.createElement('div');
+    grp.className = 'date-group';
+
+    const formatted = formatDate(dateKey);
+    grp.innerHTML = `<div class="date-header">${formatted}</div>`;
+
+    const list = document.createElement('div');
+    list.className = 'events-list';
+
+    evs.forEach((ev, idx) => {
+      const card = document.createElement('div');
+      const ct = ev._conflictType;
+      card.className = 'event-card' + (ct === 'overlap' ? ' conflict-overlap' : ct === 'roundtrip' ? ' conflict-roundtrip' : '');
+      card.style.animationDelay = (idx * 40) + 'ms';
+
+      const dep = ev.departureTime || '—:——';
+      const arr = ev.arrivalTime || '';
+      const from = ev.from || '?';
+      const to   = ev.to || '?';
+      const train = ev.trainNumber ? ev.trainNumber : '';
+      const op   = ev.operator || ev.type || '';
+
+      const badges = [];
+      if (ct === 'overlap') badges.push(`<span class="badge badge-overlap">⚠ Time overlap</span>`);
+      if (ct === 'roundtrip') badges.push(`<span class="badge badge-roundtrip">↺ Round trip flag</span>`);
+      if (train) badges.push(`<span class="badge badge-train">${escHtml(train)}</span>`);
+      if (ev.status && ev.status !== 'confirmed') badges.push(`<span class="badge badge-overlap">${escHtml(ev.status)}</span>`);
+      if (ev.refNumber) badges.push(`<span class="badge badge-train">Ref: ${escHtml(ev.refNumber)}</span>`);
+
+      card.innerHTML = `
+        <div class="ec-time">
+          <div>${escHtml(dep)}</div>
+          ${arr ? `<div class="arr">→ ${escHtml(arr)}</div>` : ''}
+        </div>
+        <div class="ec-route">
+          <div class="ec-main">
+            ${escHtml(from)}
+            <span class="ec-arrow">→</span>
+            ${escHtml(to)}
+          </div>
+          <div class="ec-meta">${escHtml(op)}${ev.rawSummary ? ' · ' + escHtml(ev.rawSummary.slice(0, 80)) : ''}</div>
+        </div>
+        <div class="ec-badges">${badges.join('')}</div>
+        ${ev._thumb ? `<div class="ec-thumb"><img src="${ev._thumb}" alt=""></div>` : ''}
+      `;
+
+      list.appendChild(card);
+    });
+
+    grp.appendChild(list);
+    tl.appendChild(grp);
+  }
+}
+
+function formatDate(dateStr) {
+  if (!dateStr || dateStr === '—') return '<span>Unknown Date</span>';
+  try {
+    const d = new Date(dateStr + 'T12:00:00');
+    const day = d.toLocaleDateString('en-GB', { weekday: 'long' }).toUpperCase();
+    const num = d.getDate();
+    const mon = d.toLocaleDateString('en-GB', { month: 'long' }).toUpperCase();
+    const yr  = d.getFullYear();
+    return `<span>${day}</span> ${num} ${mon} <span style="color:var(--muted)">${yr}</span>`;
+  } catch { return `<span>${dateStr}</span>`; }
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function clearAll() {
+  events = [];
+  uid = 0;
+  document.getElementById('queue').innerHTML = '';
+  document.getElementById('timeline').innerHTML = '';
+  document.getElementById('conflict-bar').style.display = 'none';
+  document.getElementById('legend').style.display = 'none';
+  document.getElementById('countBadge').style.display = 'none';
+  document.getElementById('btnClear').style.display = 'none';
+  document.getElementById('empty').style.display = 'none';
+}
+</script>
+</body>
+</html>
