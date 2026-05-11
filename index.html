@@ -13,7 +13,7 @@
   --border: #1e2130; --border2: #2a2f45;
   --amber: #f5a623; --amber-dim: #5a3c0a;
   --red: #e8384f; --red-dim: #4a1019;
-  --green: #2ecc71; --green-dim: #0e3d22;
+  --green: #2ecc71;
   --blue: #4a9eff; --purple: #a855f7;
   --text: #e8eaf2; --muted: #5a5f78;
   --mono: 'DM Mono', monospace;
@@ -22,66 +22,89 @@
 }
 body { background: var(--bg); color: var(--text); font-family: var(--body); min-height: 100vh; }
 
-/* ── HEADER ── */
+/* HEADER */
 header {
   display: flex; align-items: center; gap: 14px;
-  padding: 16px 28px; border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; background: rgba(7,8,13,0.95);
-  backdrop-filter: blur(12px); z-index: 100;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(7,8,13,0.96); backdrop-filter: blur(12px);
 }
-.logo { font-family: var(--head); font-size: 26px; letter-spacing: 4px; color: var(--amber); line-height: 1; }
+.logo { font-family: var(--head); font-size: 26px; letter-spacing: 4px; color: var(--amber); line-height:1; }
 .logo span { color: var(--muted); }
 .subtitle { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; }
 .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .badge-count { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; }
 .btn {
   font-family: var(--mono); font-size: 11px; background: transparent;
-  border: 1px solid var(--border); color: var(--muted); padding: 6px 14px;
-  border-radius: 4px; cursor: pointer; transition: all .15s;
-  text-transform: uppercase; letter-spacing: 1px;
+  border: 1px solid var(--border); color: var(--muted);
+  padding: 6px 14px; border-radius: 4px; cursor: pointer;
+  transition: all .15s; text-transform: uppercase; letter-spacing: 1px;
 }
 .btn:hover { border-color: var(--border2); color: var(--text); }
 .btn-amber { border-color: var(--amber-dim); color: var(--amber); background: rgba(245,166,35,0.06); }
 .btn-amber:hover { background: rgba(245,166,35,0.14); border-color: var(--amber); }
-.btn-danger:hover { border-color: var(--red); color: var(--red); }
+.btn-red:hover { border-color: var(--red); color: var(--red); }
 
-/* ── API KEY BAR ── */
-#apiKeyBar {
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 12px 28px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+/* API KEY SETUP SCREEN */
+#setupScreen {
+  max-width: 520px; margin: 60px auto; padding: 0 24px;
 }
-#apiKeyBar label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-#apiKeyInput {
-  flex: 1; min-width: 260px; background: var(--bg); border: 1px solid var(--border2);
-  color: var(--text); font-family: var(--mono); font-size: 12px; padding: 7px 12px;
-  border-radius: 4px; outline: none;
+.setup-logo { font-family: var(--head); font-size: 38px; letter-spacing: 5px; color: var(--amber); margin-bottom: 4px; }
+.setup-logo span { color: var(--muted); }
+.setup-tagline { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 36px; }
+.setup-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; }
+.setup-card h2 { font-family: var(--head); font-size: 20px; letter-spacing: 2px; margin-bottom: 12px; }
+.setup-card p { font-size: 14px; color: #a0a4b8; line-height: 1.6; margin-bottom: 20px; }
+.setup-card p strong { color: var(--text); }
+.steps { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+.step { display: flex; gap: 12px; align-items: flex-start; }
+.step-num { font-family: var(--mono); font-size: 11px; background: var(--amber-dim); color: var(--amber); border-radius: 3px; padding: 2px 7px; flex-shrink: 0; margin-top: 1px; }
+.step-text { font-size: 13px; color: #a0a4b8; line-height: 1.5; }
+.step-text a { color: var(--amber); text-decoration: none; }
+.step-text a:hover { text-decoration: underline; }
+.step-text code { font-family: var(--mono); font-size: 12px; background: var(--bg); padding: 1px 6px; border-radius: 3px; color: var(--text); }
+.key-input-row { display: flex; gap: 8px; }
+#setupKeyInput {
+  flex: 1; background: var(--bg); border: 1px solid var(--border2);
+  color: var(--text); font-family: var(--mono); font-size: 13px;
+  padding: 10px 12px; border-radius: 5px; outline: none;
 }
-#apiKeyInput:focus { border-color: var(--amber); }
-#apiKeyInput::placeholder { color: var(--muted); }
-.key-hint { font-family: var(--mono); font-size: 10px; color: var(--muted); }
-.key-hint a { color: var(--amber); text-decoration: none; }
-.key-hint a:hover { text-decoration: underline; }
-#keySavedBadge { font-family: var(--mono); font-size: 10px; color: var(--green); display: none; }
+#setupKeyInput:focus { border-color: var(--amber); }
+#setupKeyInput::placeholder { color: var(--muted); }
+#setupError { font-family: var(--mono); font-size: 11px; color: var(--red); margin-top: 8px; display: none; }
 
-/* ── MAIN ── */
-main { padding: 28px; max-width: 1100px; margin: 0 auto; }
+/* MAIN APP */
+#appScreen { display: none; }
+main { padding: 24px; max-width: 1100px; margin: 0 auto; }
 
-/* ── DROP ZONE ── */
+/* API key mini-bar inside app */
+#keyBar {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+  padding: 10px 14px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; font-family: var(--mono); font-size: 11px;
+}
+#keyBar .key-label { color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+#keyBar .key-val { color: var(--amber); flex: 1; }
+#keyBar button { font-family: var(--mono); font-size: 10px; background: none; border: 1px solid var(--border); color: var(--muted); padding: 3px 8px; border-radius: 3px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+#keyBar button:hover { border-color: var(--red); color: var(--red); }
+
+/* DROP ZONE */
 #dropzone {
   border: 1.5px dashed var(--border); border-radius: 8px;
-  padding: 44px 32px; text-align: center; cursor: pointer;
-  transition: all .2s; position: relative; margin-bottom: 28px;
-  background: var(--surface);
+  padding: 44px 24px; text-align: center;
+  transition: all .2s; position: relative; margin-bottom: 24px;
+  background: var(--surface); cursor: pointer;
 }
 #dropzone.drag-over { border-color: var(--amber); background: rgba(245,166,35,0.04); }
-#dropzone.no-key { opacity: .5; pointer-events: none; }
-#dropzone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.dz-icon { font-size: 30px; margin-bottom: 10px; opacity: .4; }
+/* The file input is NOT inside the dropzone — avoids blocking issues */
+.dz-icon { font-size: 30px; margin-bottom: 10px; opacity: .5; }
 .dz-title { font-family: var(--head); font-size: 20px; letter-spacing: 3px; margin-bottom: 6px; }
 .dz-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
-#dzNote { font-family: var(--mono); font-size: 11px; color: var(--red); margin-top: 8px; display: none; }
 
-/* ── QUEUE ── */
+/* hidden real file input, triggered via JS */
+#fileInput { display: none; }
+
+/* QUEUE */
 #queue { margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; }
 .queue-item {
   display: flex; align-items: center; gap: 12px; padding: 9px 14px;
@@ -97,87 +120,70 @@ main { padding: 28px; max-width: 1100px; margin: 0 auto; }
 .qi-spinner { width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--amber); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── CONFLICT BAR ── */
-#conflict-bar {
+/* CONFLICT BAR */
+#conflictBar {
   display: none; background: rgba(232,56,79,0.07); border: 1px solid var(--red);
-  border-radius: 6px; padding: 11px 16px; margin-bottom: 20px;
+  border-radius: 6px; padding: 11px 16px; margin-bottom: 18px;
   font-family: var(--mono); font-size: 12px; color: var(--red);
   align-items: center; gap: 10px;
 }
 
-/* ── LEGEND ── */
+/* LEGEND */
 #legend {
-  display: none; gap: 18px; margin-bottom: 20px; flex-wrap: wrap;
-  font-family: var(--mono); font-size: 11px; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 1px;
+  display: none; gap: 18px; margin-bottom: 18px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
 }
 .leg { display: flex; align-items: center; gap: 6px; }
 .leg-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
 
-/* ── TIMELINE ── */
+/* TIMELINE */
 #timeline { display: flex; flex-direction: column; gap: 26px; }
-.date-header {
-  font-family: var(--head); font-size: 28px; letter-spacing: 4px; color: var(--muted);
-  border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px;
-}
+.date-header { font-family: var(--head); font-size: 28px; letter-spacing: 4px; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
 .date-header span { color: var(--text); }
 .events-list { display: flex; flex-direction: column; gap: 7px; }
 
-/* ── EVENT CARD ── */
+/* EVENT CARD */
 .event-card {
   display: grid; grid-template-columns: 76px 1fr auto;
   align-items: center; gap: 14px; padding: 12px 16px;
   background: var(--surface); border: 1px solid var(--border);
   border-left: 3px solid transparent; border-radius: 6px;
-  transition: border-color .15s; position: relative; overflow: hidden;
-  animation: fadeUp .22s ease both;
+  position: relative; overflow: hidden;
+  animation: fadeUp .22s ease both; transition: border-color .15s;
 }
 @keyframes fadeUp { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
 .event-card:hover { border-color: var(--border2); }
-.event-card.ct-overlap    { border-left-color: var(--red);    background: rgba(232,56,79,0.04); }
-.event-card.ct-roundtrip  { border-left-color: var(--amber);  background: rgba(245,166,35,0.04); }
-.event-card.ct-duplicate  { border-left-color: var(--purple); background: rgba(168,85,247,0.04); }
-.event-card.is-manual     { border-left-color: var(--blue); }
+.event-card.ct-overlap   { border-left-color: var(--red);    background: rgba(232,56,79,0.04); }
+.event-card.ct-roundtrip { border-left-color: var(--amber);  background: rgba(245,166,35,0.04); }
+.event-card.ct-duplicate { border-left-color: var(--purple); background: rgba(168,85,247,0.04); }
+.event-card.is-manual    { border-left-color: var(--blue); }
 
 .ec-time { font-family: var(--mono); font-size: 13px; color: var(--amber); line-height: 1.7; }
 .ec-time .arr { color: var(--muted); font-size: 11px; }
 .ec-route { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-.ec-main {
-  font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text);
-  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+.ec-main { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .ec-arrow { color: var(--muted); font-size: 11px; flex-shrink: 0; }
-.ec-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ec-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ec-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.badge {
-  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
-  letter-spacing: 1px; padding: 3px 7px; border-radius: 3px; white-space: nowrap;
-}
+.badge { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 3px 7px; border-radius: 3px; white-space: nowrap; }
 .b-overlap   { background: rgba(232,56,79,0.15);   color: var(--red);    border: 1px solid var(--red); }
 .b-roundtrip { background: var(--amber-dim);        color: var(--amber);  border: 1px solid var(--amber); }
 .b-duplicate { background: rgba(168,85,247,0.15);   color: var(--purple); border: 1px solid var(--purple); }
 .b-manual    { background: rgba(74,158,255,0.1);    color: var(--blue);   border: 1px solid rgba(74,158,255,0.3); }
 .b-info      { background: #0d1220; color: var(--muted); border: 1px solid var(--border); }
-
 .ec-thumb { position: absolute; right: 0; top: 0; bottom: 0; width: 52px; overflow: hidden; opacity: .06; pointer-events: none; }
 .ec-thumb img { height: 100%; width: 100%; object-fit: cover; object-position: left; }
 .ec-del { position: absolute; top: 5px; right: 7px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; opacity: 0; transition: opacity .15s; padding: 2px 4px; z-index: 2; }
 .event-card:hover .ec-del { opacity: .45; }
 .ec-del:hover { opacity: 1 !important; color: var(--red); }
 
-/* ── MODAL ── */
-.modal-backdrop {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.72); backdrop-filter: blur(4px);
-  z-index: 200; align-items: center; justify-content: center; padding: 16px;
-}
+/* EMPTY */
+#empty { text-align: center; padding: 52px 0; font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; display: none; }
+
+/* MANUAL MODAL */
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
 .modal-backdrop.open { display: flex; }
-.modal {
-  background: var(--surface); border: 1px solid var(--border2); border-radius: 10px;
-  width: 100%; max-width: 490px; padding: 26px; position: relative;
-  animation: mIn .18s ease;
-}
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; width: 100%; max-width: 490px; padding: 26px; position: relative; animation: mIn .18s ease; }
 @keyframes mIn { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
 .modal-title { font-family: var(--head); font-size: 22px; letter-spacing: 3px; margin-bottom: 3px; }
 .modal-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px; }
@@ -186,22 +192,19 @@ main { padding: 28px; max-width: 1100px; margin: 0 auto; }
 .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 18px; }
 .fgrid .full { grid-column: 1 / -1; }
 .field label { display: block; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 5px; }
-.field input, .field select {
+.field input {
   width: 100%; background: var(--bg); border: 1px solid var(--border2);
   color: var(--text); font-family: var(--mono); font-size: 13px;
   padding: 8px 11px; border-radius: 4px; outline: none; transition: border-color .15s;
 }
-.field input:focus, .field select:focus { border-color: var(--amber); }
+.field input:focus { border-color: var(--amber); }
 .field input::placeholder { color: var(--muted); }
 .m-actions { display: flex; gap: 9px; justify-content: flex-end; }
 #mError { font-family: var(--mono); font-size: 11px; color: var(--red); margin-bottom: 12px; display: none; }
 
-#empty { text-align: center; padding: 52px 0; font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; display: none; }
-
 @media (max-width: 580px) {
   main { padding: 12px; }
   header { padding: 12px 14px; }
-  #apiKeyBar { padding: 10px 14px; }
   .event-card { grid-template-columns: 64px 1fr; }
   .ec-badges { display: none; }
   .fgrid { grid-template-columns: 1fr; }
@@ -210,55 +213,93 @@ main { padding: 28px; max-width: 1100px; margin: 0 auto; }
 </head>
 <body>
 
-<header>
-  <div>
-    <div class="logo">CHRON<span>O</span></div>
-    <div class="subtitle">Screenshot Timeline Sorter</div>
-  </div>
-  <div class="hdr-right">
-    <span class="badge-count" id="countBadge" style="display:none"></span>
-    <button class="btn btn-amber" onclick="openModal()">+ Add manually</button>
-    <button class="btn btn-danger" id="btnClear" style="display:none" onclick="clearAll()">Clear all</button>
-  </div>
-</header>
+<!-- ══════════ SETUP SCREEN ══════════ -->
+<div id="setupScreen">
+  <div class="setup-logo">CHRON<span>O</span></div>
+  <div class="setup-tagline">Screenshot Timeline Sorter</div>
 
-<!-- API KEY BAR -->
-<div id="apiKeyBar">
-  <label for="apiKeyInput">Anthropic API Key</label>
-  <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-…" oninput="onKeyInput()" autocomplete="off" spellcheck="false">
-  <span class="key-hint">Get yours at <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com</a></span>
-  <span id="keySavedBadge">✓ Key saved</span>
+  <div class="setup-card">
+    <h2>One-time setup</h2>
+    <p>
+      This app uses <strong>Claude AI</strong> to read your screenshots and pull out the train details automatically.
+      To do that it needs an <strong>API key</strong> — think of it like a password that lets the app talk to Claude.
+      It's free to get, and your key is only stored in your browser.
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">Go to <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a> and sign up (free)</div>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">Click <strong>"Create Key"</strong>, give it any name, copy the key — it looks like <code>sk-ant-api03-…</code></div>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">Paste it below and press <strong>Continue</strong></div>
+      </div>
+    </div>
+
+    <div class="key-input-row">
+      <input type="password" id="setupKeyInput" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') saveKey()">
+      <button class="btn btn-amber" onclick="saveKey()">Continue →</button>
+    </div>
+    <div id="setupError"></div>
+  </div>
 </div>
 
-<main>
-  <!-- DROP ZONE -->
-  <div id="dropzone" class="no-key">
-    <input type="file" id="fileInput" accept="image/*" multiple>
-    <div class="dz-icon">📸</div>
-    <div class="dz-title">Drop Screenshots Here</div>
-    <div class="dz-sub">or click to browse · multiple files supported</div>
-    <div id="dzNote">Enter your API key above first</div>
-  </div>
+<!-- ══════════ APP SCREEN ══════════ -->
+<div id="appScreen">
+  <header>
+    <div>
+      <div class="logo">CHRON<span>O</span></div>
+      <div class="subtitle">Screenshot Timeline Sorter</div>
+    </div>
+    <div class="hdr-right">
+      <span class="badge-count" id="countBadge" style="display:none"></span>
+      <button class="btn btn-amber" onclick="openModal()">+ Add manually</button>
+      <button class="btn btn-red" id="btnClear" style="display:none" onclick="clearAll()">Clear all</button>
+    </div>
+  </header>
 
-  <div id="queue"></div>
+  <main>
+    <!-- Key mini-bar -->
+    <div id="keyBar">
+      <span class="key-label">API Key</span>
+      <span class="key-val" id="keyPreview"></span>
+      <button onclick="changeKey()">Change key</button>
+    </div>
 
-  <div id="conflict-bar">
-    <span style="font-size:15px">⚠</span>
-    <span id="conflictMsg"></span>
-  </div>
+    <!-- Drop zone (no file input inside — avoids iOS/click issues) -->
+    <div id="dropzone" onclick="triggerFilePick()" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
+      <div class="dz-icon">📸</div>
+      <div class="dz-title">Tap to add screenshots</div>
+      <div class="dz-sub">or drag and drop · multiple files supported</div>
+    </div>
+    <!-- File input lives outside the dropzone -->
+    <input type="file" id="fileInput" accept="image/*" multiple onchange="onFilePick()">
 
-  <div id="legend">
-    <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Time overlap</div>
-    <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Round-trip / close departure</div>
-    <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Duplicate train + time</div>
-    <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Manual entry</div>
-  </div>
+    <div id="queue"></div>
 
-  <div id="timeline"></div>
-  <div id="empty">No events yet — upload screenshots or add manually</div>
-</main>
+    <div id="conflictBar">
+      <span style="font-size:15px">⚠</span>
+      <span id="conflictMsg"></span>
+    </div>
 
-<!-- MANUAL ENTRY MODAL -->
+    <div id="legend">
+      <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Time overlap</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Round-trip / close departure</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Duplicate train + time</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Manual entry</div>
+    </div>
+
+    <div id="timeline"></div>
+    <div id="empty">No events yet — tap above or add manually</div>
+  </main>
+</div>
+
+<!-- ══════════ MANUAL ENTRY MODAL ══════════ -->
 <div class="modal-backdrop" id="modalBg" onclick="bgClick(event)">
   <div class="modal">
     <button class="modal-x" onclick="closeModal()">✕</button>
@@ -267,7 +308,7 @@ main { padding: 28px; max-width: 1100px; margin: 0 auto; }
     <div class="fgrid">
       <div class="field full">
         <label>Operator</label>
-        <input type="text" id="fOp" placeholder="e.g. Öresundståg" value="Öresundståg">
+        <input type="text" id="fOp" value="Öresundståg" placeholder="e.g. Öresundståg">
       </div>
       <div class="field">
         <label>Train number (tågnr)</label>
@@ -309,51 +350,62 @@ main { padding: 28px; max-width: 1100px; margin: 0 auto; }
 <script>
 const API_URL = "https://api.anthropic.com/v1/messages";
 const MODEL   = "claude-sonnet-4-20250514";
-const RT_WIN  = 90; // round-trip window minutes
+const RT_WIN  = 90;
+let events = [], uid = 0;
 
-let events = [];
-let uid = 0;
-
-// ── API KEY ──
-const keyInput = document.getElementById('apiKeyInput');
-const dz       = document.getElementById('dropzone');
-const dzNote   = document.getElementById('dzNote');
-
-// restore saved key
-const savedKey = localStorage.getItem('chrono_key');
-if (savedKey) { keyInput.value = savedKey; enableDrop(); }
-
-function onKeyInput() {
-  const v = keyInput.value.trim();
-  if (v.startsWith('sk-ant')) {
-    localStorage.setItem('chrono_key', v);
-    document.getElementById('keySavedBadge').style.display = 'inline';
-    enableDrop();
+// ── SETUP / KEY ──
+function init() {
+  const k = localStorage.getItem('chrono_key');
+  if (k && k.startsWith('sk-ant')) {
+    showApp(k);
   } else {
-    document.getElementById('keySavedBadge').style.display = 'none';
-    dz.classList.add('no-key');
-    dzNote.style.display = 'block';
+    document.getElementById('setupScreen').style.display = 'block';
   }
 }
-function getKey() { return keyInput.value.trim(); }
-function enableDrop() {
-  dz.classList.remove('no-key');
-  dzNote.style.display = 'none';
+
+function saveKey() {
+  const k = document.getElementById('setupKeyInput').value.trim();
+  const errEl = document.getElementById('setupError');
+  if (!k.startsWith('sk-ant')) {
+    errEl.textContent = '⚠ That doesn\'t look like a valid key. It should start with sk-ant…';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+  localStorage.setItem('chrono_key', k);
+  showApp(k);
 }
 
-// ── DRAG & DROP ──
-dz.addEventListener('dragover', e => { e.preventDefault(); if (!dz.classList.contains('no-key')) dz.classList.add('drag-over'); });
-dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
-dz.addEventListener('drop', e => {
-  e.preventDefault(); dz.classList.remove('drag-over');
-  if (!getKey()) { dzNote.style.display = 'block'; return; }
+function showApp(k) {
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  document.getElementById('keyPreview').textContent = k.slice(0,18) + '…';
+}
+
+function changeKey() {
+  localStorage.removeItem('chrono_key');
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('setupScreen').style.display = 'block';
+  document.getElementById('setupKeyInput').value = '';
+}
+
+function getKey() { return localStorage.getItem('chrono_key') || ''; }
+
+// ── FILE PICK ──
+function triggerFilePick() {
+  document.getElementById('fileInput').click();
+}
+function onFilePick() {
+  const fi = document.getElementById('fileInput');
+  handleFiles([...fi.files]);
+  fi.value = '';
+}
+function dzOver(e)  { e.preventDefault(); document.getElementById('dropzone').classList.add('drag-over'); }
+function dzLeave()  { document.getElementById('dropzone').classList.remove('drag-over'); }
+function dzDrop(e)  {
+  e.preventDefault(); document.getElementById('dropzone').classList.remove('drag-over');
   handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
-});
-document.getElementById('fileInput').addEventListener('change', function() {
-  if (!getKey()) { dzNote.style.display = 'block'; return; }
-  handleFiles([...this.files]);
-  this.value = '';
-});
+}
 
 async function handleFiles(files) {
   if (!files.length) return;
@@ -366,57 +418,61 @@ function addQItem(id, name, isManual) {
   const q = document.getElementById('queue');
   const el = document.createElement('div');
   el.className = 'queue-item'; el.id = 'qi' + id;
-  if (isManual) {
-    el.innerHTML = `<span style="flex-shrink:0">✏️</span><div class="qi-name">${esc(name)}</div><div class="qi-status manual">Manual</div>`;
-  } else {
-    el.innerHTML = `<div class="qi-spinner" id="qis${id}"></div><div class="qi-name">${esc(name)}</div><div class="qi-status analyzing" id="qist${id}">Analyzing…</div>`;
-  }
+  el.innerHTML = isManual
+    ? `<span style="flex-shrink:0">✏️</span><div class="qi-name">${esc(name)}</div><div class="qi-status manual">Manual</div>`
+    : `<div class="qi-spinner" id="qis${id}"></div><div class="qi-name">${esc(name)}</div><div class="qi-status analyzing" id="qist${id}">Analyzing…</div>`;
   q.appendChild(el);
 }
-function qDone(id, ok) {
+function qDone(id, ok, errMsg) {
   const s = document.getElementById('qis' + id);
   const t = document.getElementById('qist' + id);
   if (s) s.style.display = 'none';
-  if (t) { t.textContent = ok ? 'Done' : 'Failed'; t.className = 'qi-status ' + (ok ? 'done' : 'error'); }
+  if (t) {
+    t.textContent = ok ? 'Done' : 'Failed';
+    t.className = 'qi-status ' + (ok ? 'done' : 'error');
+    if (errMsg) t.title = errMsg;
+  }
 }
 
-// ── IMAGE UTILS ──
-const toB64    = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(f); });
-const toDataURL = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
+// ── FILE → BASE64 ──
+const toB64     = f => new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(f); });
+const toDataURL = f => new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
 
 // ── CLAUDE API ──
 async function analyzeImage(b64, mime) {
-  const prompt = `You are a data extraction assistant. Inspect this screenshot and extract every travel/transit event visible.
+  const prompt = `You are a travel data extraction assistant. Look at this screenshot and extract every transit/travel event you can see.
 
-Respond with ONLY a raw JSON object — no markdown fences, no prose. Format:
+Respond with ONLY a raw JSON object — no markdown fences, no explanation, no extra text:
 {
   "found": true,
   "events": [
     {
-      "date": "YYYY-MM-DD",
-      "departureTime": "HH:MM",
-      "arrivalTime": "HH:MM",
-      "from": "station name",
-      "to": "station name",
-      "trainNumber": "number or null",
-      "operator": "company or null",
+      "date": "YYYY-MM-DD or null",
+      "departureTime": "HH:MM or null",
+      "arrivalTime": "HH:MM or null",
+      "from": "departure station or null",
+      "to": "arrival station or null",
+      "trainNumber": "train/flight number or null",
+      "operator": "company name or null",
       "type": "train",
-      "rawSummary": "one-line plain summary",
+      "rawSummary": "one-line plain text summary",
       "status": "confirmed",
-      "refNumber": "claim/booking ref or null"
+      "refNumber": "reference/claim number or null"
     }
   ]
 }
 
-Rules:
-• If no travel data found: {"found":false,"events":[]}
-• 24h time only (HH:MM)
-• Multiple events in one image → one array entry each
-• Extract ALL events, not just the first`;
+If no travel data is visible: {"found":false,"events":[]}
+Use 24h HH:MM time. Extract ALL events in the image, one per array entry.`;
 
   const resp = await fetch(API_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': getKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': getKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
     body: JSON.stringify({
       model: MODEL, max_tokens: 1000,
       messages: [{ role: 'user', content: [
@@ -425,12 +481,13 @@ Rules:
       ]}]
     })
   });
+
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
     throw new Error(err.error?.message || `HTTP ${resp.status}`);
   }
   const data = await resp.json();
-  const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
+  const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g,'').trim();
   return JSON.parse(raw);
 }
 
@@ -449,17 +506,15 @@ async function processFile(file) {
     qDone(id, true);
   } catch(e) {
     console.error(e);
-    qDone(id, false);
-    // show error inline
-    const t = document.getElementById('qist' + id);
-    if (t) t.title = e.message;
+    qDone(id, false, e.message);
   }
 }
 
 // ── MANUAL MODAL ──
 function openModal() {
   document.getElementById('mError').style.display = 'none';
-  if (!document.getElementById('fDate').value) document.getElementById('fDate').value = new Date().toISOString().slice(0,10);
+  if (!document.getElementById('fDate').value)
+    document.getElementById('fDate').value = new Date().toISOString().slice(0,10);
   document.getElementById('modalBg').classList.add('open');
 }
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
@@ -468,10 +523,9 @@ function bgClick(e) { if (e.target === document.getElementById('modalBg')) close
 function submitManual() {
   const errEl = document.getElementById('mError');
   errEl.style.display = 'none';
-  const from  = document.getElementById('fFrom').value.trim();
-  const to    = document.getElementById('fTo').value.trim();
-  const date  = document.getElementById('fDate').value;
-  const dep   = document.getElementById('fDep').value;
+  const from = document.getElementById('fFrom').value.trim();
+  const to   = document.getElementById('fTo').value.trim();
+  const date = document.getElementById('fDate').value;
   if (!from || !to) { errEl.textContent = '⚠ From and To are required.'; errEl.style.display = 'block'; return; }
   if (!date)        { errEl.textContent = '⚠ Date is required.'; errEl.style.display = 'block'; return; }
 
@@ -481,22 +535,25 @@ function submitManual() {
   addQItem(id, label, true);
 
   events.push({
-    date, departureTime: dep || null, arrivalTime: document.getElementById('fArr').value || null,
+    date,
+    departureTime: document.getElementById('fDep').value || null,
+    arrivalTime:   document.getElementById('fArr').value || null,
     from, to,
     trainNumber: train || null,
     operator: document.getElementById('fOp').value.trim() || 'Öresundståg',
     type: 'train', rawSummary: `${from} → ${to}`,
-    status: 'confirmed', refNumber: document.getElementById('fRef').value.trim() || null,
+    status: 'confirmed',
+    refNumber: document.getElementById('fRef').value.trim() || null,
     _id: `${id}_${Math.random().toString(36).slice(2)}`, _thumb: null, _file: label, _manual: true,
   });
 
-  ['fTrain','fDep','fArr','fFrom','fTo','fRef'].forEach(id => document.getElementById(id).value = '');
+  ['fTrain','fDep','fArr','fFrom','fTo','fRef'].forEach(f => document.getElementById(f).value = '');
   closeModal();
   renderTimeline();
 }
 
 // ── CONFLICT DETECTION ──
-function toDT(date, time) { return (date && time) ? new Date(`${date}T${time}:00`) : null; }
+function toDT(d,t) { return (d&&t) ? new Date(`${d}T${t}:00`) : null; }
 function norm(s) { return (s||'').toLowerCase().replace(/[^a-z0-9åäöæøü]/g,''); }
 
 function detectConflicts(evs) {
@@ -505,31 +562,27 @@ function detectConflicts(evs) {
     for (let j = i+1; j < evs.length; j++) {
       const a = evs[i], b = evs[j];
       if (!a.date || !b.date) continue;
-
-      const aD = toDT(a.date, a.departureTime), aA = toDT(a.date, a.arrivalTime);
-      const bD = toDT(b.date, b.departureTime), bA = toDT(b.date, b.arrivalTime);
+      const aD=toDT(a.date,a.departureTime), aA=toDT(a.date,a.arrivalTime);
+      const bD=toDT(b.date,b.departureTime), bA=toDT(b.date,b.arrivalTime);
       const sameDay = a.date === b.date;
 
-      // 1. DUPLICATE: same tågnr + same date + same dep time
-      if (sameDay && a.trainNumber && a.trainNumber === b.trainNumber
-          && a.departureTime && a.departureTime === b.departureTime) {
-        a._ct = 'duplicate'; b._ct = 'duplicate';
+      // Duplicate: same tågnr + same date + same dep time
+      if (sameDay && a.trainNumber && a.trainNumber===b.trainNumber
+          && a.departureTime && a.departureTime===b.departureTime) {
+        a._ct='duplicate'; b._ct='duplicate';
         a._cf.push(b._id); b._cf.push(a._id); continue;
       }
-
-      // 2. TIME OVERLAP
+      // Time overlap
       if (aD && aA && bD && bA && aD < bA && bD < aA) {
-        if (!a._ct) a._ct = 'overlap'; if (!b._ct) b._ct = 'overlap';
+        if (!a._ct) a._ct='overlap'; if (!b._ct) b._ct='overlap';
         a._cf.push(b._id); b._cf.push(a._id); continue;
       }
-
-      // 3. ROUND TRIP: A→B and B→A same day within window
-      const fA = norm(a.from), tA = norm(a.to), fB = norm(b.from), tB = norm(b.to);
+      // Round trip
+      const fA=norm(a.from), tA=norm(a.to), fB=norm(b.from), tB=norm(b.to);
       if (sameDay && fA && tA && fB && tB) {
-        const rev = (fA === tB && tA === fB) ||
-          (fA.slice(0,6) === tB.slice(0,6) && tA.slice(0,6) === fB.slice(0,6));
+        const rev = (fA===tB && tA===fB) || (fA.slice(0,6)===tB.slice(0,6) && tA.slice(0,6)===fB.slice(0,6));
         if (rev && aD && bD && Math.abs((bD-aD)/60000) <= RT_WIN) {
-          if (!a._ct) a._ct = 'roundtrip'; if (!b._ct) b._ct = 'roundtrip';
+          if (!a._ct) a._ct='roundtrip'; if (!b._ct) b._ct='roundtrip';
           a._cf.push(b._id); b._cf.push(a._id);
         }
       }
@@ -537,107 +590,106 @@ function detectConflicts(evs) {
   }
 }
 
-// ── RENDER ──
+// ── RENDER TIMELINE ──
 function renderTimeline() {
   const none = !events.length;
   document.getElementById('empty').style.display = none ? 'block' : 'none';
   document.getElementById('countBadge').style.display = none ? 'none' : 'inline';
   document.getElementById('btnClear').style.display = none ? 'none' : 'inline';
   const tl = document.getElementById('timeline');
-  if (none) { tl.innerHTML = ''; hide('conflict-bar'); hide('legend'); return; }
+  if (none) { tl.innerHTML=''; hide('conflictBar'); hide('legend'); return; }
 
-  document.getElementById('countBadge').textContent = `${events.length} event${events.length !== 1 ? 's' : ''}`;
+  document.getElementById('countBadge').textContent = `${events.length} event${events.length!==1?'s':''}`;
 
-  const sorted = [...events].sort((a, b) => {
-    if (!a.date && !b.date) return 0;
+  const sorted = [...events].sort((a,b) => {
+    if (!a.date&&!b.date) return 0;
     if (!a.date) return 1; if (!b.date) return -1;
-    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    if (a.date!==b.date) return a.date.localeCompare(b.date);
     return (a.departureTime||'99:99').localeCompare(b.departureTime||'99:99');
   });
-
   detectConflicts(sorted);
 
-  const cn = { overlap: 0, roundtrip: 0, duplicate: 0 };
-  sorted.forEach(e => { if (e._ct) cn[e._ct] = (cn[e._ct]||0) + 1; });
-  const hasC = Object.values(cn).some(v => v > 0);
+  const cn = {overlap:0,roundtrip:0,duplicate:0};
+  sorted.forEach(e => { if (e._ct) cn[e._ct]=(cn[e._ct]||0)+1; });
+  const hasC = Object.values(cn).some(v=>v>0);
 
-  const cbar = document.getElementById('conflict-bar');
+  const cbar = document.getElementById('conflictBar');
   cbar.style.display = hasC ? 'flex' : 'none';
   document.getElementById('legend').style.display = hasC ? 'flex' : 'none';
   if (hasC) {
-    const parts = [];
+    const parts=[];
     if (cn.duplicate) parts.push(`${cn.duplicate} duplicate${cn.duplicate>1?'s':''}`);
     if (cn.overlap)   parts.push(`${cn.overlap} time overlap${cn.overlap>1?'s':''}`);
     if (cn.roundtrip) parts.push(`${cn.roundtrip} round-trip flag${cn.roundtrip>1?'s':''}`);
     document.getElementById('conflictMsg').textContent = parts.join(' · ');
   }
 
-  // group by date
   const groups = {};
-  for (const ev of sorted) { const k = ev.date||'—'; if (!groups[k]) groups[k]=[]; groups[k].push(ev); }
+  for (const ev of sorted) { const k=ev.date||'—'; if(!groups[k]) groups[k]=[]; groups[k].push(ev); }
 
   tl.innerHTML = '';
   for (const [dk, evs] of Object.entries(groups)) {
     const grp = document.createElement('div');
     grp.innerHTML = `<div class="date-header">${fmtDate(dk)}</div>`;
-    const list = document.createElement('div');
-    list.className = 'events-list';
+    const list = document.createElement('div'); list.className='events-list';
 
-    evs.forEach((ev, i) => {
+    evs.forEach((ev,i) => {
       const card = document.createElement('div');
       card.className = 'event-card'
-        + (ev._ct === 'overlap'   ? ' ct-overlap'   : '')
-        + (ev._ct === 'roundtrip' ? ' ct-roundtrip' : '')
-        + (ev._ct === 'duplicate' ? ' ct-duplicate' : '')
-        + (ev._manual             ? ' is-manual'    : '');
+        + (ev._ct==='overlap'   ? ' ct-overlap'   : '')
+        + (ev._ct==='roundtrip' ? ' ct-roundtrip' : '')
+        + (ev._ct==='duplicate' ? ' ct-duplicate' : '')
+        + (ev._manual           ? ' is-manual'    : '');
       card.style.animationDelay = `${i*30}ms`;
 
-      const badges = [];
-      if (ev._ct === 'duplicate')  badges.push(`<span class="badge b-duplicate">⬡ Duplicate</span>`);
-      if (ev._ct === 'overlap')    badges.push(`<span class="badge b-overlap">⚠ Time overlap</span>`);
-      if (ev._ct === 'roundtrip')  badges.push(`<span class="badge b-roundtrip">↺ Round-trip</span>`);
-      if (ev._manual)              badges.push(`<span class="badge b-manual">✏ Manual</span>`);
-      if (ev.trainNumber)          badges.push(`<span class="badge b-info">tågnr ${esc(ev.trainNumber)}</span>`);
-      if (ev.refNumber)            badges.push(`<span class="badge b-info">${esc(ev.refNumber)}</span>`);
+      const badges=[];
+      if (ev._ct==='duplicate')  badges.push(`<span class="badge b-duplicate">⬡ Duplicate</span>`);
+      if (ev._ct==='overlap')    badges.push(`<span class="badge b-overlap">⚠ Time overlap</span>`);
+      if (ev._ct==='roundtrip')  badges.push(`<span class="badge b-roundtrip">↺ Round-trip</span>`);
+      if (ev._manual)            badges.push(`<span class="badge b-manual">✏ Manual</span>`);
+      if (ev.trainNumber)        badges.push(`<span class="badge b-info">tågnr ${esc(ev.trainNumber)}</span>`);
+      if (ev.refNumber)          badges.push(`<span class="badge b-info">${esc(ev.refNumber)}</span>`);
 
-      const meta = [ev.operator, ev.status && ev.status !== 'confirmed' ? ev.status.toUpperCase() : null].filter(Boolean).join(' · ');
+      const meta=[ev.operator, ev.status&&ev.status!=='confirmed'?ev.status.toUpperCase():null].filter(Boolean).join(' · ');
 
-      card.innerHTML = `
+      card.innerHTML=`
         <button class="ec-del" onclick="delEvent('${ev._id}')" title="Remove">✕</button>
         <div class="ec-time">
           <div>${esc(ev.departureTime||'—:——')}</div>
-          ${ev.arrivalTime ? `<div class="arr">→ ${esc(ev.arrivalTime)}</div>` : ''}
+          ${ev.arrivalTime?`<div class="arr">→ ${esc(ev.arrivalTime)}</div>`:''}
         </div>
         <div class="ec-route">
           <div class="ec-main">${esc(ev.from||'?')}<span class="ec-arrow">→</span>${esc(ev.to||'?')}</div>
-          ${meta ? `<div class="ec-meta">${esc(meta)}</div>` : ''}
+          ${meta?`<div class="ec-meta">${esc(meta)}</div>`:''}
         </div>
         <div class="ec-badges">${badges.join('')}</div>
-        ${ev._thumb ? `<div class="ec-thumb"><img src="${ev._thumb}" alt=""></div>` : ''}
+        ${ev._thumb?`<div class="ec-thumb"><img src="${ev._thumb}" alt=""></div>`:''}
       `;
       list.appendChild(card);
     });
-    grp.appendChild(list);
-    tl.appendChild(grp);
+    grp.appendChild(list); tl.appendChild(grp);
   }
 }
 
-function delEvent(id) { events = events.filter(e => e._id !== id); renderTimeline(); }
-function hide(id) { document.getElementById(id).style.display = 'none'; }
+function delEvent(id) { events=events.filter(e=>e._id!==id); renderTimeline(); }
+function hide(id) { const el=document.getElementById(id); if(el) el.style.display='none'; }
 function fmtDate(ds) {
-  if (!ds || ds === '—') return '<span>Unknown Date</span>';
+  if (!ds||ds==='—') return '<span>Unknown Date</span>';
   try {
-    const d = new Date(ds + 'T12:00:00');
+    const d=new Date(ds+'T12:00:00');
     return `<span>${d.toLocaleDateString('en-GB',{weekday:'long'}).toUpperCase()}</span> ${d.getDate()} ${d.toLocaleDateString('en-GB',{month:'long'}).toUpperCase()} <span style="color:var(--muted)">${d.getFullYear()}</span>`;
   } catch { return `<span>${ds}</span>`; }
 }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function clearAll() {
-  events = []; uid = 0;
-  ['queue','timeline'].forEach(id => document.getElementById(id).innerHTML='');
-  ['conflict-bar','legend','countBadge','btnClear'].forEach(id => hide(id));
-  document.getElementById('empty').style.display = 'none';
+  events=[]; uid=0;
+  ['queue','timeline'].forEach(id=>document.getElementById(id).innerHTML='');
+  ['conflictBar','legend','countBadge','btnClear'].forEach(hide);
+  document.getElementById('empty').style.display='none';
 }
+
+// boot
+init();
 </script>
 </body>
 </html>
